@@ -6,6 +6,7 @@ import { ApiService } from "../api/api-services.js";
 import { GlobalState } from "../utility/state.js";
 import { MatchingService } from "../utility/matching.js";
 import { StorageService } from "../utility/storage.js";
+import { DateFormatter } from "../utility/date-formatter.js";
 document.addEventListener("DOMContentLoaded", async () => {
     const sessionUser = GlobalState.getSession();
     if (!sessionUser) {
@@ -125,14 +126,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
             container.innerHTML = items.map(item => {
-                const daysInCol = Math.floor((Date.now() - new Date(item.movedAt).getTime()) / (1000 * 60 * 60 * 24));
-                const isStale = status === "applied" && daysInCol > 14;
+                const isStale = DateFormatter.isOlderThanDays(item.movedAt, 14) && status === "applied";
+                const timeAgo = DateFormatter.formatRelative(item.movedAt);
                 return `
-                    <div class="pipeline-card">
-                        ${isStale ? '<span style="font-size: 0.7rem; background: #fee2e2; color: #dc2626; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: bold;">⚠️ Stale (>14 days)</span>' : ''}
-                        <div class="pipeline-card-title">${item.title}</div>
+                    <div class="pipeline-card" style="position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+                            <span style="font-size: 0.65rem; color: var(--text-muted);">${timeAgo}</span>
+                            ${isStale ? '<span style="font-size: 0.65rem; background: #fee2e2; color: #dc2626; padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">⚠️ Stale</span>' : ''}
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="pipeline-card-title">${item.title}</div>
+                            <button class="note-btn" data-id="${item.id}" data-note="${item.note || ''}" style="background: none; border: none; cursor: pointer; font-size: 0.9rem;" title="Add/Edit Note">
+                                ${item.note ? '📝' : '➕📝'}
+                            </button>
+                        </div>
+                        
                         <div style="font-size: 0.8rem; color: var(--text-muted);">${item.company}</div>
-                        <div class="pipeline-card-actions">
+                        
+                        ${item.note ? `<div style="font-size: 0.75rem; background: #f8fafc; border-left: 3px solid var(--primary); padding: 0.3rem 0.5rem; margin-top: 0.4rem; border-radius: 4px; color: var(--text-main);"><strong>Note:</strong> ${item.note}</div>` : ''}
+
+                        <div class="pipeline-card-actions" style="margin-top: 0.5rem;">
                             ${status !== 'wishlist' ? `<button class="move-card" data-id="${item.id}" data-dir="prev">← Prev</button>` : '<span></span>'}
                             ${status !== 'closed' ? `<button class="move-card" data-id="${item.id}" data-dir="next">Next →</button>` : '<span></span>'}
                         </div>
@@ -140,6 +154,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
             }).join('');
         });
+        // Attach Note Handlers
+        document.querySelectorAll(".note-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const target = e.currentTarget;
+                const id = target.getAttribute("data-id");
+                const currentNote = target.getAttribute("data-note") || "";
+                const newNote = prompt("Add interview notes or follow-up reminders:", currentNote);
+                if (newNote !== null) {
+                    const item = pipeline.find(p => p.id === id);
+                    if (item) {
+                        item.note = newNote.trim();
+                        StorageService.save(`pipeline_${user.email}`, pipeline);
+                        renderPipeline();
+                    }
+                }
+            });
+        });
+        // Attach Move Card Handlers
         document.querySelectorAll(".move-card").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
