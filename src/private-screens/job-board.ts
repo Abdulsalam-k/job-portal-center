@@ -29,14 +29,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userNameEl = document.getElementById("user-name") as HTMLElement;
     if (userNameEl) userNameEl.textContent = user.name;
 
-    // Load jobs & pipeline state using GlobalState so custom admin jobs sync instantly
-    let jobs = GlobalState.getJobs();
-    if (jobs.length === 0) {
+    // Fetch live API jobs first, cache them to GlobalState, then load merged jobs (API + Admin)
+    try {
         const apiJobs = await ApiService.fetchJobs();
         GlobalState.setJobs(apiJobs);
-        jobs = GlobalState.getJobs();
+    } catch (error) {
+        console.warn("Could not fetch remote jobs, proceeding with fallback and admin data.", error);
     }
 
+    let jobs = GlobalState.getJobs();
     let pipeline: PipelineItem[] = StorageService.load<PipelineItem[]>(`pipeline_${user.email}`) || [];
 
     // Tab Navigation Logic

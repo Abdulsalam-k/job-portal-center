@@ -34,8 +34,9 @@ export interface Application {
 
 class AppState {
     private currentUser: User | null = null;
-    private jobs: Job[] = [];
+    private apiJobs: Job[] = [];
     private applications: Application[] = [];
+    private readonly ADMIN_STORAGE_KEY = "admin_custom_jobs";
 
     constructor() {
         // Load initial user session and applications from storage if available
@@ -58,17 +59,24 @@ class AppState {
         StorageService.remove("current_user");
     }
 
-    // Job Data Methods
+    // Job Data Methods (Separated API vs Admin Architecture)
+    
+    /**
+     * Set or update jobs successfully fetched from the external API
+     */
     setJobs(jobs: Job[]): void {
-        // Keep track of runtime jobs passed (e.g. from API)
-        this.jobs = jobs;
+        this.apiJobs = jobs;
     }
 
+    /**
+     * Get combined jobs for UI display (Admin Custom Jobs + API Jobs + Fallbacks)
+     * Neither data source affects or blocks the other.
+     */
     getJobs(): Job[] {
-        const customJobs = StorageService.load<Job[]>("admin_custom_jobs") || [];
+        const adminJobs = StorageService.load<Job[]>(this.ADMIN_STORAGE_KEY) || [];
         
-        // Fallback default jobs if everything else is empty (prevents blank screens due to network/API issues)
-        const defaultJobs: Job[] = this.jobs.length > 0 ? this.jobs : [
+        // Fallback default jobs used only if both API and Admin lists are completely empty
+        const fallbackJobs: Job[] = [
             {
                 id: "default-1",
                 title: "Frontend TypeScript Developer",
@@ -91,12 +99,14 @@ class AppState {
             }
         ];
 
-        // Combine runtime/API jobs with saved custom admin jobs dynamically
+        // Determine active API source: use runtime fetched apiJobs if available, otherwise fall back
+        const activeApiJobs = this.apiJobs.length > 0 ? this.apiJobs : fallbackJobs;
+
+        // Combine them cleanly using a Map to ensure unique IDs (Admin jobs prioritized first)
         const allJobsMap = new Map<string, Job>();
         
-        // Load custom admin jobs first so they appear at the top, followed by runtime/API/default jobs
-        customJobs.forEach(job => allJobsMap.set(job.id, job));
-        defaultJobs.forEach(job => {
+        adminJobs.forEach(job => allJobsMap.set(job.id, job));
+        activeApiJobs.forEach(job => {
             if (!allJobsMap.has(job.id)) {
                 allJobsMap.set(job.id, job);
             }
@@ -105,16 +115,33 @@ class AppState {
         return Array.from(allJobsMap.values());
     }
 
+    /**
+     * Get strictly admin-created jobs for the Admin Management panel
+     */
+    getAdminJobs(): Job[] {
+        return StorageService.load<Job[]>(this.ADMIN_STORAGE_KEY) || [];
+    }
+
+    /**
+     * Add a new job created explicitly from the Admin panel
+     */
     addJob(job: Job): void {
-        // Add to runtime memory
-        this.jobs.unshift(job);
+        const adminJobs = StorageService.load<Job[]>(this.ADMIN_STORAGE_KEY) || [];
         
-        // Persist admin-created jobs immediately to storage
-        const customJobs = StorageService.load<Job[]>("admin_custom_jobs") || [];
-        // Prevent duplicate entries in storage
-        const filtered = customJobs.filter(j => j.id !== job.id);
+        // Prevent duplicate entries in storage and add to the top
+        const filtered = adminJobs.filter(j => j.id !== job.id);
         filtered.unshift(job);
-        StorageService.save("admin_custom_jobs", filtered);
+        
+        StorageService.save(this.ADMIN_STORAGE_KEY, filtered);
+    }
+
+    /**
+     * Delete an admin-created job by ID
+     */
+    deleteAdminJob(id: string): void {
+        let adminJobs = StorageService.load<Job[]>(this.ADMIN_STORAGE_KEY) || [];
+        adminJobs = adminJobs.filter(j => j.id !== id);
+        StorageService.save(this.ADMIN_STORAGE_KEY, adminJobs);
     }
 
     // Application Management Methods

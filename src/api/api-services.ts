@@ -48,6 +48,7 @@ export const ApiService = {
         } catch (error) {
             // This catches CORS blocks, network drops, timeouts, or empty payloads instantly
             console.warn("External API blocked or unavailable. Switching to platform seed listings:", error);
+           
             
             return [
                 {

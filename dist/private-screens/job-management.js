@@ -22,11 +22,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     // Track editing state: holds the ID of the job currently being edited (if any)
     let editingJobId = null;
-    // Load initial jobs
-    let jobs = GlobalState.getJobs();
-    if (jobs.length === 0) {
-        jobs = await ApiService.fetchJobs();
-        GlobalState.setJobs(jobs);
+    // Fetch live API jobs first, then render admin control panel
+    try {
+        const apiJobs = await ApiService.fetchJobs();
+        GlobalState.setJobs(apiJobs);
+    }
+    catch (error) {
+        console.warn("Could not fetch remote jobs for admin background sync.", error);
     }
     renderAdminDashboard();
     // Handle posting or updating a job
@@ -46,9 +48,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const skills = skillsInput && skillsInput.value ? skillsInput.value.split(",").map(s => s.trim()).filter(Boolean) : ["TypeScript", "General"];
         const description = descInput.value.trim();
         if (editingJobId) {
-            // EDIT MODE: Update existing job
-            const currentAllJobs = GlobalState.getJobs();
-            const updatedJobs = currentAllJobs.map(job => {
+            // EDIT MODE: Update existing admin job safely through storage
+            const adminJobs = GlobalState.getAdminJobs();
+            const updatedAdminJobs = adminJobs.map(job => {
                 if (job.id === editingJobId) {
                     return {
                         ...job,
@@ -61,16 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 return job;
             });
-            GlobalState.setJobs(updatedJobs);
-            // Update custom storage if it exists there
-            const customJobs = StorageService.load("admin_custom_jobs") || [];
-            const updatedCustom = customJobs.map(job => {
-                if (job.id === editingJobId) {
-                    return { ...job, title, company, salary, skills, description };
-                }
-                return job;
-            });
-            StorageService.save("admin_custom_jobs", updatedCustom);
+            StorageService.save("admin_custom_jobs", updatedAdminJobs);
             // Reset editing state and button text
             editingJobId = null;
             if (submitBtn)
@@ -78,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Job listing updated successfully!");
         }
         else {
-            // CREATE MODE: Add new job
+            // CREATE MODE: Add new admin job
             const newJob = {
                 id: `admin-${Date.now()}`,
                 title,
@@ -122,21 +115,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p style="font-size: 0.85rem; color: var(--text-muted);">${job.company} • ${job.salary || 'Competitive'}</p>
                 </div>
                 <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn edit-btn" data-job-id="${job.id}" style="background: rgba(37, 99, 235, 0.1); color: var(--primary, #2563eb); border: 1px solid #93c5fd; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">
-                        Edit
-                    </button>
-                    <button class="btn delete-btn" data-job-id="${job.id}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #f87171; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">
-                        Remove
-                    </button>
+                    ${job.source === 'admin' ? `
+                        <button class="btn edit-btn" data-job-id="${job.id}" style="background: rgba(37, 99, 235, 0.1); color: var(--primary, #2563eb); border: 1px solid #93c5fd; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">
+                            Edit
+                        </button>
+                        <button class="btn delete-btn" data-job-id="${job.id}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid #f87171; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">
+                            Remove
+                        </button>
+                    ` : '<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">API Feed Item</span>'}
                 </div>
             </div>
         `).join('');
-        // Attach edit handlers
+        // Attach edit handlers for admin jobs only
         document.querySelectorAll(".edit-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
                 const jobId = target.getAttribute("data-job-id");
-                const targetJob = GlobalState.getJobs().find(j => j.id === jobId);
+                const targetJob = GlobalState.getAdminJobs().find(j => j.id === jobId);
                 if (!targetJob)
                     return;
                 // Populate form fields with existing job data
@@ -164,17 +159,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 adminJobForm.scrollIntoView({ behavior: "smooth" });
             });
         });
-        // Attach delete handlers
+        // Attach delete handlers for admin jobs
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
                 const jobId = target.getAttribute("data-job-id");
-                const currentAllJobs = GlobalState.getJobs();
-                const updatedJobs = currentAllJobs.filter(j => j.id !== jobId);
-                GlobalState.setJobs(updatedJobs);
-                const customJobs = StorageService.load("admin_custom_jobs") || [];
-                const filteredCustom = customJobs.filter(j => j.id !== jobId);
-                StorageService.save("admin_custom_jobs", filteredCustom);
+                if (jobId) {
+                    GlobalState.deleteAdminJob(jobId);
+                }
                 // If user was editing this exact job and decided to delete it, reset the form
                 if (editingJobId === jobId) {
                     editingJobId = null;
