@@ -9,7 +9,9 @@ export const ApiService = {
             // Attempting fetch with a safe timeout or fallback mechanism
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 4000); // Timeout after 4s if blocked/slow
-            const response = await fetch("https://remotive.com/api/remote-jobs?limit=15", {
+            // Read the API URL safely from Vite's env variables, falling back to Remotive if undefined
+            const baseUrl = import.meta.env?.VITE_API_BASE_URL || "https://remotive.com/api/remote-jobs";
+            const response = await fetch(`${baseUrl}?limit=15`, {
                 method: "GET",
                 signal: controller.signal,
                 headers: {
