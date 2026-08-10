@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Job & Project Portal</title>
+    <link rel="stylesheet" href="job-management.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>Admin Portal</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="job-management.html" class="active">🛠️ Manage Jobs</a>
+                <a href="#" id="logout-btn" class="logout-link">🚪 Sign Out</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Administrator Control Center</h1>
+                    <p>Welcome back, <span id="admin-name">Admin</span>. Total active listings: <strong id="total-jobs-count">0</strong></p>
+                </div>
+            </header>
+
+            <div class="admin-grid-container">
+                <!-- Post Job Form Card -->
+                <section class="card form-card">
+                    <h2>Post New Opportunity</h2>
+                    <form id="admin-job-form">
+                        <div class="form-group">
+                            <label for="job-title">Job Title</label>
+                            <input type="text" id="job-title" required placeholder="e.g. Senior TypeScript Developer">
+                        </div>
+                        <div class="form-group">
+                            <label for="job-company">Company Name</label>
+                            <input type="text" id="job-company" required placeholder="e.g. Acme Corporation">
+                        </div>
+                        <div class="form-group">
+                            <label for="job-salary">Salary Range</label>
+                            <input type="text" id="job-salary" placeholder="e.g. $110k - $140k">
+                        </div>
+                        <div class="form-group">
+                            <label for="job-skills">Required Skills (Comma separated)</label>
+                            <input type="text" id="job-skills" required placeholder="TypeScript, React, Node.js">
+                        </div>
+                        <div class="form-group">
+                            <label for="job-desc">Job Description</label>
+                            <textarea id="job-desc" rows="4" required placeholder="Provide a summary of the role requirements..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publish Job Listing</button>
+                    </form>
+                </section>
+
+                <!-- Active Listings Feed -->
+                <section class="card list-card">
+                    <h2>Active Platform Listings</h2>
+                    <div id="admin-job-list" class="admin-job-list">
+                        <!-- Populated dynamically by job-management.ts -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Linked compiled JavaScript output -->
+    <script type="module" src="../../dist/private-screens/job-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"version":3,"file":"date-formatter.d.ts","sourceRoot":"","sources":["../../src/utility/date-formatter.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,eAAO,MAAM,aAAa;IACtB,cAAc,gBAAgB,MAAM,GAAG,MAAM;IAY7C,eAAe,gBAAgB,MAAM,QAAQ,MAAM,GAAG,OAAO;CAMhE,CAAC"}

@@ -1,0 +1,14 @@
+{
+  "name": "job-project-portal",
+  "version": "1.0.0",
+  "description": "Job Hunt Command Center",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

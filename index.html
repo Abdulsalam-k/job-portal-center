@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobHunt Command Center — Enterprise Portal</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">JobHunt <span>Command</span></div>
+        <div class="nav-actions">
+            <div id="job-counter" class="badge">Initializing network...</div>
+            <a href="src/public-screens/login.html" class="btn btn-outline">Sign In</a>
+            <a href="src/public-screens/login.html" class="btn btn-primary">Get Started</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">⚡ Live Telemetry & API Integration Active</div>
+        <h1>Land Your Next Engineering Role with Data-Driven Precision</h1>
+        <p>Real-time remote listings aggregated from global developers networks, evaluated against your custom skill profile, and synchronized seamlessly.</p>
+        
+        <div class="search-filter-container">
+            <div class="search-filter-bar">
+                <input type="text" id="search-input" placeholder="Search by title, company, or tech stack (e.g. TypeScript, React)...">
+                <select id="source-filter">
+                    <option value="all">All Data Sources</option>
+                    <option value="api">Live API Feed</option>
+                    <option value="admin">Admin Posted</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Job Listings Grid Container -->
+    <main class="container">
+        <div class="section-header">
+            <h2>Platform Job Feed</h2>
+            <span class="sub-text">Showing live merged platform dataset</span>
+        </div>
+        
+        <div id="job-grid" class="job-grid">
+            <div class="job-card-skeleton">
+                <div class="spinner"></div>
+                <p>Fetching active listings from the network...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 JobHunt Command Center. Built with Vanilla TypeScript, HTML, and CSS.</p>
+    </footer>
+
+    <!-- Main Entry Module Script -->
+    <script type="module" src="dist/index.js"></script>
+</body>
+</html>

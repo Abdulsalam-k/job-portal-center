@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Command Center - Job Portal</title>
+    <link rel="stylesheet" href="job-board.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>Command Center</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#feed" class="nav-link active" data-target="feed-section">💼 Job Discovery</a>
+                <a href="#pipeline" class="nav-link" data-target="pipeline-section">📊 Pipeline Board</a>
+                <a href="#profile" class="nav-link" data-target="profile-section">⚡ Skills & Stats</a>
+                <a href="#" id="logout-btn" class="logout-link">🚪 Sign Out</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="user-name">Talent</span> 👋</h1>
+                    <p>Track matches, manage your active pipeline, and monitor your search stats.</p>
+                </div>
+            </header>
+
+            <!-- SECTION 1: Job Discovery Feed -->
+            <section id="feed-section" class="content-section active-section">
+                <div class="filters-row">
+                    <input type="text" id="search-input" placeholder="Search by title, company, or skill..." class="search-input">
+                    <select id="match-filter" class="filter-select">
+                        <option value="0">Minimum Match: Any</option>
+                        <option value="50">50%+ Match</option>
+                        <option value="70">70%+ Match</option>
+                        <option value="85">85%+ Match</option>
+                    </select>
+                </div>
+                <div id="job-feed" class="job-feed-grid"></div>
+            </section>
+
+            <!-- SECTION 2: Pipeline Board (Wishlist → Applied → Interviewing → Offer/Rejected) -->
+            <section id="pipeline-section" class="content-section" style="display: none;">
+                <div class="pipeline-board">
+                    <!-- Column 1: Wishlist -->
+                    <div class="pipeline-column" data-status="wishlist">
+                        <h3>📌 Wishlist</h3>
+                        <div class="column-cards" id="col-wishlist"></div>
+                    </div>
+                    <!-- Column 2: Applied -->
+                    <div class="pipeline-column" data-status="applied">
+                        <h3>📤 Applied</h3>
+                        <div class="column-cards" id="col-applied"></div>
+                    </div>
+                    <!-- Column 3: Interviewing -->
+                    <div class="pipeline-column" data-status="interviewing">
+                        <h3>💬 Interviewing</h3>
+                        <div class="column-cards" id="col-interviewing"></div>
+                    </div>
+                    <!-- Column 4: Offer  -->
+                    <div class="pipeline-column" data-status="offer">
+                        <h3>🎉 Offer </h3>
+                        <div class="column-cards" id="col-offer"></div>
+                    </div>
+                    <div class="pipeline-column" data-status="rejected">
+                        <h3>❌ Rejected </h3>
+                        <div class="column-cards" id="col-rejected"></div>
+                    </div>
+                    <div class="pipeline-column" data-status="closed">
+                        <h3>🔒 Closed </h3>
+                        <div class="column-cards" id="col-closed"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Skills Profile & Live Stats -->
+            <section id="profile-section" class="content-section" style="display: none;">
+                <div class="profile-stats-grid">
+                    <div class="card">
+                        <h2>Your Skill Tags</h2>
+                        <div id="skills-container" class="skills-tag-list"></div>
+                        <div class="add-skill-row" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <input type="text" id="new-skill-input" placeholder="Add skill (e.g. React)..." class="search-input">
+                            <button id="add-skill-btn" class="btn btn-primary" style="width: auto; padding: 0.5rem 1rem;">Add</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2>Search Performance Metrics</h2>
+                        <div class="stats-list" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                            <p><strong>Response Rate:</strong> <span id="stat-response-rate">0%</span></p>
+                            <p><strong>Applications This Month:</strong> <span id="stat-monthly-apps">0</span></p>
+                            <p><strong>Avg Time-to-First-Response:</strong> <span id="stat-avg-response">N/A</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Output -->
+    <script type="module" src="../../dist/private-screens/job-board.js"></script>
+</body>
+</html>
