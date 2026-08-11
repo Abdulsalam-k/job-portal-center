@@ -5,8 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const errorBanner = document.getElementById("error-banner");
+    const togglePasswordBtn = document.getElementById("toggle-password");
     if (!registerForm)
         return;
+    togglePasswordBtn?.addEventListener("click", () => {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        togglePasswordBtn.textContent = type === "password" ? "👁️" : "🙈";
+    });
     registerForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const name = nameInput.value.trim();

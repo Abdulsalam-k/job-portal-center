@@ -4,8 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const errorBanner = document.getElementById("error-banner");
+    const togglePasswordBtn = document.getElementById("toggle-password");
     if (!loginForm)
         return;
+    // Show/Hide Password Eye Toggle Logic
+    togglePasswordBtn?.addEventListener("click", () => {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        togglePasswordBtn.textContent = type === "password" ? "👁️" : "🙈";
+    });
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const email = emailInput.value.trim().toLowerCase();
@@ -17,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         let role = "talent";
         let name = "Professional Talent";
-        // Simple mock rule for role assignment to impress your mentor:
-        // If email includes 'admin', assign admin privileges, otherwise treat as talent.
+        // Simple mock rule for role assignment
         if (email.includes("admin")) {
             role = "admin";
             name = "Portal Administrator";

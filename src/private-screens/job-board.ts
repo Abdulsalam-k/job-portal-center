@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-
     const jobFeedEl = document.getElementById("job-feed") as HTMLElement;
     const searchInput = document.getElementById("search-input") as HTMLInputElement;
     const matchFilter = document.getElementById("match-filter") as HTMLSelectElement;
@@ -145,33 +144,51 @@ document.addEventListener("DOMContentLoaded", async () => {
             container.innerHTML = items.map(item => {
                 const isStale = DateFormatter.isOlderThanDays(item.movedAt, 14) && status === "applied";
                 const timeAgo = DateFormatter.formatRelative(item.movedAt);
-                const exactTime = DateFormatter.formatExact(item.movedAt); // <--- Exact timestamp added here
+                const exactTime = DateFormatter.formatExact(item.movedAt);
 
                 return `
-                    <div class="pipeline-card" style="position: relative;">
+                    <div class="pipeline-card" style="position: relative; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s ease;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
-                            <span style="font-size: 0.65rem; color: var(--text-muted);" title="Exact: ${exactTime}">📅 ${timeAgo} (${exactTime})</span>
-                            ${isStale ? '<span style="font-size: 0.65rem; background: #fee2e2; color: #dc2626; padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">⚠️ Stale</span>' : ''}
+                            <span style="font-size: 0.65rem; color: var(--text-muted);" title="Exact: ${exactTime}">📅 ${timeAgo}</span>
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                ${isStale ? '<span style="font-size: 0.65rem; background: #fee2e2; color: #dc2626; padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">⚠️ Stale</span>' : ''}
+                                <button class="remove-pipeline-btn" data-id="${item.id}" style="background: none; border: none; cursor: pointer; font-size: 0.85rem;" title="Remove from Pipeline">🗑️</button>
+                            </div>
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div class="pipeline-card-title">${item.title}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.3rem;">
+                            <div class="pipeline-card-title" style="font-weight: 600; font-size: 0.95rem; color: #0f172a;">${item.title}</div>
                             <button class="note-btn" data-id="${item.id}" data-note="${item.note || ''}" style="background: none; border: none; cursor: pointer; font-size: 0.9rem;" title="Add/Edit Note">
                                 ${item.note ? '📝' : '➕📝'}
                             </button>
                         </div>
                         
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">${item.company}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem;">${item.company}</div>
                         
                         ${item.note ? `<div style="font-size: 0.75rem; background: #f8fafc; border-left: 3px solid var(--primary); padding: 0.3rem 0.5rem; margin-top: 0.4rem; border-radius: 4px; color: var(--text-main);"><strong>Note:</strong> ${item.note}</div>` : ''}
 
-                        <div class="pipeline-card-actions" style="margin-top: 0.5rem;">
-                            ${status !== 'wishlist' ? `<button class="move-card" data-id="${item.id}" data-dir="prev">← Prev</button>` : '<span></span>'}
-                            ${status !== 'closed' ? `<button class="move-card" data-id="${item.id}" data-dir="next">Next →</button>` : '<span></span>'}
+                        <div class="pipeline-card-actions" style="margin-top: 0.75rem; display: flex; justify-content: space-between; gap: 0.5rem;">
+                            ${status !== 'wishlist' ? `<button class="move-card btn-sm" data-id="${item.id}" data-dir="prev" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">← Prev</button>` : '<span></span>'}
+                            ${status !== 'closed' ? `<button class="move-card btn-sm" data-id="${item.id}" data-dir="next" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">Next →</button>` : '<span></span>'}
                         </div>
                     </div>
                 `;
             }).join('');
+        });
+
+        document.querySelectorAll(".remove-pipeline-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const target = e.currentTarget as HTMLElement;
+                const id = target.getAttribute("data-id");
+                
+                if (confirm("Are you sure you want to remove this job from your pipeline? It will be returned to your job discovery feed.")) {
+                    pipeline = pipeline.filter(p => p.id !== id);
+                    StorageService.save(`pipeline_${user.email}`, pipeline);
+                    renderPipeline();
+                    renderFeed();
+                    computeStats();
+                }
+            });
         });
 
         document.querySelectorAll(".note-btn").forEach(btn => {

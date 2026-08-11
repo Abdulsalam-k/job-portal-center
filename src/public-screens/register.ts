@@ -6,8 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailInput = document.getElementById("email") as HTMLInputElement;
     const passwordInput = document.getElementById("password") as HTMLInputElement;
     const errorBanner = document.getElementById("error-banner") as HTMLElement;
+    const togglePasswordBtn = document.getElementById("toggle-password");
 
     if (!registerForm) return;
+    togglePasswordBtn?.addEventListener("click", () => {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        togglePasswordBtn.textContent = type === "password" ? "👁️" : "🙈";
+    });
 
     registerForm.addEventListener("submit", (e) => {
         e.preventDefault();

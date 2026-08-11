@@ -1,12 +1,20 @@
-import { GlobalState,type User } from "../utility/state.js";
+import { GlobalState, type User } from "../utility/state.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login-form") as HTMLFormElement;
     const emailInput = document.getElementById("email") as HTMLInputElement;
     const passwordInput = document.getElementById("password") as HTMLInputElement;
     const errorBanner = document.getElementById("error-banner") as HTMLElement;
+    const togglePasswordBtn = document.getElementById("toggle-password") as HTMLButtonElement;
 
     if (!loginForm) return;
+
+    // Show/Hide Password Eye Toggle Logic
+    togglePasswordBtn?.addEventListener("click", () => {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        togglePasswordBtn.textContent = type === "password" ? "👁️" : "🙈";
+    });
 
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -22,8 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let role: "talent" | "admin" = "talent";
         let name = "Professional Talent";
 
-        // Simple mock rule for role assignment to impress your mentor:
-        // If email includes 'admin', assign admin privileges, otherwise treat as talent.
+        // Simple mock rule for role assignment
         if (email.includes("admin")) {
             role = "admin";
             name = "Portal Administrator";

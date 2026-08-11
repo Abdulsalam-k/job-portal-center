@@ -13,7 +13,12 @@
 body { background-color: var(--bg-main); color: var(--text-main); }
 .dashboard-layout { display: flex; min-height: 100vh; }
 .sidebar { width: 260px; background: var(--card-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 2rem 1.5rem; }
-.sidebar-brand h2 { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 2rem; }
+
+/* Replaced .sidebar-brand h2 with modern logo styling */
+.sidebar-brand { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 2rem; }
+.sidebar-brand-logo { background: var(--primary); color: white; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+.sidebar-brand-text { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.025em; color: var(--text-main); }
+
 .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; }
 .sidebar-nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; padding: 0.75rem 1rem; border-radius: 8px; transition: 0.2s; }
 .sidebar-nav a.active, .sidebar-nav a:hover { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
@@ -71,10 +76,82 @@ body { background-color: var(--bg-main); color: var(--text-main); }
     gap: 0.75rem; 
 }
 
-.pipeline-card { background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 0.5rem; }
-.pipeline-card-title { font-weight: 600; font-size: 0.95rem; }
-.pipeline-card-actions { display: flex; justify-content: space-between; margin-top: 0.5rem; }
-.pipeline-card-actions button { background: none; border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 600; }
+.pipeline-card { background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 0.5rem; transition: all 0.2s ease; }
+.pipeline-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+
+.pipeline-card-title { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
+.pipeline-card-actions { display: flex; justify-content: space-between; margin-top: 0.5rem; gap: 0.5rem; }
+
+/* Enhanced and Polished Button UI */
+.pipeline-card-actions button, .btn {
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.move-card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+}
+
+.move-card:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: var(--text-main);
+}
+
+.remove-pipeline-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    border-radius: 4px;
+    padding: 0.2rem;
+}
+
+.remove-pipeline-btn:hover {
+    opacity: 1;
+    background: #fee2e2;
+}
+
+.note-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0.2rem;
+}
+
+.note-btn:hover {
+    background: #f1f5f9;
+}
 
 .profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; }
