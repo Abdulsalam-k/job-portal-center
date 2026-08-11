@@ -1,8 +1,3 @@
-/**
- * Validators Utility
- * Validates emails, passwords, and form entries.
- */
-
 export const Validators = {
     isValidEmail(email: string): boolean {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -1,7 +1,3 @@
-/**
- * Global Application State Management
- * Holds runtime data for user sessions, jobs, and filters.
- */
 export interface User {
     email: string;
     role: "talent" | "admin";

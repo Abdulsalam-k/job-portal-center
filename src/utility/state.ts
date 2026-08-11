@@ -1,8 +1,3 @@
-/**
- * Global Application State Management
- * Holds runtime data for user sessions, jobs, and filters.
- */
-
 import { StorageService } from "./storage.js";
 
 export interface User {

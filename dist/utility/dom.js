@@ -1,7 +1,3 @@
-/**
- * DOM Utility
- * Provides safe type-checked selectors and UI helper functions.
- */
 export const DomUtil = {
     $(selector, parent = document) {
         return parent.querySelector(selector);

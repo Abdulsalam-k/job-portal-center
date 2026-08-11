@@ -1,7 +1,3 @@
-/**
- * Admin Job Management Dashboard Controller
- * Handles administrator session verification, live job posting, editing, and listing deletion.
- */
 import { ApiService } from "../api/api-services.js";
 import { GlobalState } from "../utility/state.js";
 import { StorageService } from "../utility/storage.js";
@@ -12,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const adminJobListEl = document.getElementById("admin-job-list");
     const totalJobsEl = document.getElementById("total-jobs-count");
     const logoutBtn = document.getElementById("logout-btn");
-    // Security check: Verify admin role privileges
     if (!adminUser || adminUser.role !== "admin") {
         window.location.href = "../public-screens/login.html";
         return;
@@ -20,7 +15,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (adminNameEl) {
         adminNameEl.textContent = adminUser.name;
     }
-    // Track editing state: holds the ID of the job currently being edited (if any)
     let editingJobId = null;
     // Fetch live API jobs first, then render admin control panel
     try {

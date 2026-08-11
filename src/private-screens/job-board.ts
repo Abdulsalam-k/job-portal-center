@@ -1,8 +1,3 @@
-/**
- * Talent Command Center Dashboard Controller
- * Handles live feed matching, pipeline board stages, skill profiling, and stats computation.
- */
-
 import { ApiService } from "../api/api-services.js";
 import { GlobalState, type Job, type User } from "../utility/state.js";
 import { MatchingService } from "../utility/matching.js";
@@ -21,8 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "../public-screens/login.html";
         return;
     }
-
-    // Ensure user and skills are fully defined and never null/undefined
+    
     const user: User = {
         ...sessionUser,
         skills: sessionUser.skills || []
@@ -31,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userNameEl = document.getElementById("user-name") as HTMLElement;
     if (userNameEl) userNameEl.textContent = user.name;
 
-    // Fetch live API jobs first, cache them to GlobalState, then load merged jobs (API + Admin)
     try {
         const apiJobs = await ApiService.fetchJobs();
         GlobalState.setJobs(apiJobs);
@@ -42,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let jobs = GlobalState.getJobs();
     let pipeline: PipelineItem[] = StorageService.load<PipelineItem[]>(`pipeline_${user.email}`) || [];
 
-    // Tab Navigation Logic
     const navLinks = document.querySelectorAll(".nav-link");
     const sections = document.querySelectorAll(".content-section");
 
@@ -58,7 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const targetSec = document.getElementById(targetId);
                 if (targetSec) {
                     targetSec.style.display = "block";
-                    // Refresh jobs and feed whenever switching tabs to pull newly created admin jobs
                     if (targetId === "discovery" || targetId === "job-board") {
                         jobs = GlobalState.getJobs();
                         renderFeed();
@@ -68,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Render Discovery Feed
+
     const jobFeedEl = document.getElementById("job-feed") as HTMLElement;
     const searchInput = document.getElementById("search-input") as HTMLInputElement;
     const matchFilter = document.getElementById("match-filter") as HTMLSelectElement;
@@ -76,7 +67,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderFeed() {
         if (!jobFeedEl) return;
         
-        // Refresh jobs from GlobalState so newly added admin posts appear instantly
         jobs = GlobalState.getJobs();
 
         const query = searchInput?.value.toLowerCase() || "";
@@ -139,7 +129,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     matchFilter?.addEventListener("change", renderFeed);
     renderFeed();
 
-    // Render Pipeline Board Columns
     function renderPipeline() {
         const statuses: ("wishlist" | "applied" | "interviewing"| "offer"| "rejected" | "closed")[] = ["wishlist", "applied", "interviewing", "offer", "rejected", "closed"];
         
@@ -185,7 +174,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }).join('');
         });
 
-        // Attach Note Handlers
         document.querySelectorAll(".note-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -204,7 +192,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        // Attach Move Card Handlers
         document.querySelectorAll(".move-card").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -229,7 +216,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     renderPipeline();
 
-    // Skills Profile & Stats
     const skillsContainer = document.getElementById("skills-container") as HTMLElement;
     const newSkillInput = document.getElementById("new-skill-input") as HTMLInputElement;
     const addSkillBtn = document.getElementById("add-skill-btn") as HTMLButtonElement;

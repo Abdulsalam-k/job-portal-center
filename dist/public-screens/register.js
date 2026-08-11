@@ -1,7 +1,3 @@
-/**
- * Registration Screen Controller
- * Handles new user account creation and redirects to the job board.
- */
 import { GlobalState } from "../utility/state.js";
 document.addEventListener("DOMContentLoaded", () => {
     const registerForm = document.getElementById("register-form");

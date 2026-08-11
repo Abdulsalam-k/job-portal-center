@@ -6,10 +6,8 @@ import {} from "../utility/state.js";
 export const ApiService = {
     async fetchJobs() {
         try {
-            // Attempting fetch with a safe timeout or fallback mechanism
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000); // Timeout after 4s if blocked/slow
-            // Read the API URL safely from Vite's env variables, falling back to Remotive if undefined
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
             const baseUrl = import.meta.env?.VITE_API_BASE_URL || "https://remotive.com/api/remote-jobs";
             const response = await fetch(`${baseUrl}?limit=15`, {
                 method: "GET",
@@ -38,7 +36,6 @@ export const ApiService = {
             throw new Error("No jobs found in API response.");
         }
         catch (error) {
-            // This catches CORS blocks, network drops, timeouts, or empty payloads instantly
             console.warn("External API blocked or unavailable. Switching to platform seed listings:", error);
             return [
                 {

@@ -1,8 +1,3 @@
-/**
- * Date Formatter Utility
- * Handles relative time parsing and human-readable dates.
- */
-
 export const DateFormatter = {
     formatRelative(isoDateString: string): string {
         const date = new Date(isoDateString);

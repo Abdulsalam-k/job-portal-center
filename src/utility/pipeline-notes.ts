@@ -1,8 +1,3 @@
-/**
- * Pipeline Notes Utility
- * Handles adding, editing, and persisting notes for pipeline items.
- */
-
 import { StorageService } from "./storage.js";
 
 export const PipelineNotes = {

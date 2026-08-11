@@ -1,7 +1,3 @@
-/**
- * Smart Job Matching Utility
- * Calculates relevance percentages between user skills and job requirements.
- */
 import {} from "./state.js";
 export const MatchingService = {
     calculateMatch(user, job) {

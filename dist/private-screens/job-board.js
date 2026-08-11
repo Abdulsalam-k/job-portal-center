@@ -1,7 +1,3 @@
-/**
- * Talent Command Center Dashboard Controller
- * Handles live feed matching, pipeline board stages, skill profiling, and stats computation.
- */
 import { ApiService } from "../api/api-services.js";
 import { GlobalState } from "../utility/state.js";
 import { MatchingService } from "../utility/matching.js";
@@ -13,7 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "../public-screens/login.html";
         return;
     }
-    // Ensure user and skills are fully defined and never null/undefined
     const user = {
         ...sessionUser,
         skills: sessionUser.skills || []
@@ -21,7 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userNameEl = document.getElementById("user-name");
     if (userNameEl)
         userNameEl.textContent = user.name;
-    // Fetch live API jobs first, cache them to GlobalState, then load merged jobs (API + Admin)
     try {
         const apiJobs = await ApiService.fetchJobs();
         GlobalState.setJobs(apiJobs);
@@ -31,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     let jobs = GlobalState.getJobs();
     let pipeline = StorageService.load(`pipeline_${user.email}`) || [];
-    // Tab Navigation Logic
     const navLinks = document.querySelectorAll(".nav-link");
     const sections = document.querySelectorAll(".content-section");
     navLinks.forEach(link => {
@@ -45,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const targetSec = document.getElementById(targetId);
                 if (targetSec) {
                     targetSec.style.display = "block";
-                    // Refresh jobs and feed whenever switching tabs to pull newly created admin jobs
                     if (targetId === "discovery" || targetId === "job-board") {
                         jobs = GlobalState.getJobs();
                         renderFeed();
@@ -54,14 +46,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     });
-    // Render Discovery Feed
     const jobFeedEl = document.getElementById("job-feed");
     const searchInput = document.getElementById("search-input");
     const matchFilter = document.getElementById("match-filter");
     function renderFeed() {
         if (!jobFeedEl)
             return;
-        // Refresh jobs from GlobalState so newly added admin posts appear instantly
         jobs = GlobalState.getJobs();
         const query = searchInput?.value.toLowerCase() || "";
         const minMatch = parseInt(matchFilter?.value || "0", 10);
@@ -113,7 +103,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     searchInput?.addEventListener("input", renderFeed);
     matchFilter?.addEventListener("change", renderFeed);
     renderFeed();
-    // Render Pipeline Board Columns
     function renderPipeline() {
         const statuses = ["wishlist", "applied", "interviewing", "offer", "rejected", "closed"];
         statuses.forEach(status => {
@@ -155,7 +144,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
             }).join('');
         });
-        // Attach Note Handlers
         document.querySelectorAll(".note-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
@@ -172,7 +160,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
         });
-        // Attach Move Card Handlers
         document.querySelectorAll(".move-card").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
@@ -195,7 +182,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     renderPipeline();
-    // Skills Profile & Stats
     const skillsContainer = document.getElementById("skills-container");
     const newSkillInput = document.getElementById("new-skill-input");
     const addSkillBtn = document.getElementById("add-skill-btn");

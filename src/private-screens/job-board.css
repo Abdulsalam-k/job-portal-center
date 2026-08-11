@@ -31,7 +31,6 @@ body { background-color: var(--bg-main); color: var(--text-main); }
 
 .job-feed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; }
 
-/* Pipeline Board Grid - Updated for 6 Columns */
 .pipeline-board { 
     display: grid; 
     grid-template-columns: repeat(6, 1fr); 

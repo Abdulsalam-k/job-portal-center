@@ -1,8 +1,3 @@
-/**
- * Registration Screen Controller
- * Handles new user account creation and redirects to the job board.
- */
-
 import { GlobalState, type User } from "../utility/state.js";
 
 document.addEventListener("DOMContentLoaded", () => {

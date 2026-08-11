@@ -1,7 +1,3 @@
-/**
- * Auth Utility
- * Manages user access level validations and route guards.
- */
 import { GlobalState } from "./state.js";
 export const AuthUtility = {
     requireAuth(requiredRole) {

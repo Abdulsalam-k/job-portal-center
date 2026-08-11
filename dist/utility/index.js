@@ -1,7 +1,3 @@
-/**
- * Public Landing Page Controller
- * Handles loading jobs, rendering cards, and filtering the global feed.
- */
 import { ApiService } from "../api/api-services.js";
 import { GlobalState } from "../utility/state.js";
 document.addEventListener("DOMContentLoaded", async () => {

@@ -1,7 +1,3 @@
-/**
- * DOM Utility
- * Provides safe type-checked selectors and UI helper functions.
- */
 export declare const DomUtil: {
     $<T extends HTMLElement>(selector: string, parent?: Document | HTMLElement): T | null;
     $$(selector: string, parent?: Document | HTMLElement): NodeListOf<HTMLElement>;

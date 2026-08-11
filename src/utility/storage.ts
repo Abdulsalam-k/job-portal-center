@@ -1,8 +1,3 @@
-/**
- * Professional LocalStorage Utility Service
- * Provides type-safe methods to read and write data to the browser storage.
- */
-
 export const StorageService = {
     // Save any data safely with type checking
     save<T>(key: string, data: T): void {

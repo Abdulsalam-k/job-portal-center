@@ -1,8 +1,3 @@
-/**
- * Login Screen Controller
- * Validates user credentials and routes to talent or admin dashboards.
- */
-
 import { GlobalState,type User } from "../utility/state.js";
 
 document.addEventListener("DOMContentLoaded", () => {
