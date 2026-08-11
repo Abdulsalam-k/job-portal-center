@@ -266,16 +266,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function computeStats() {
         const totalApplied = pipeline.filter(p => p.status !== "wishlist").length;
-        const progressed = pipeline.filter(p => p.status === "interviewing" || p.status === "closed").length;
+        const progressed = pipeline.filter(p => p.status === "interviewing" || p.status === "offer" || p.status === "closed").length;
         const responseRate = totalApplied > 0 ? Math.round((progressed / totalApplied) * 100) : 0;
+
+        // Calculate Average Time-to-First-Response
+        // We look for items that have progressed and check how long they took
+        const respondedItems = pipeline.filter(p => p.status === "interviewing" || p.status === "offer");
+        let avgDays = "N/A";
+
+        if (respondedItems.length > 0) {
+            const totalDays = respondedItems.reduce((acc, item) => {
+                // If you store an appliedAt timestamp, use that. Otherwise, we estimate using movedAt
+                const appliedDate = new Date(item.movedAt).getTime(); // Simplified for demo
+                const now = Date.now();
+                const diffTime = Math.abs(now - appliedDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return acc + diffDays;
+            }, 0);
+
+            const average = Math.round(totalDays / respondedItems.length);
+            avgDays = `${average} days`;
+        }
 
         const rateEl = document.getElementById("stat-response-rate");
         const monthlyEl = document.getElementById("stat-monthly-apps");
+        const timeEl = document.getElementById("stat-avg-time"); // Ensure you have this element ID in your HTML
 
         if (rateEl) rateEl.textContent = `${responseRate}%`;
         if (monthlyEl) monthlyEl.textContent = totalApplied.toString();
+        if (timeEl) timeEl.textContent = avgDays;
     }
+    
     computeStats();
+
 
     document.getElementById("logout-btn")?.addEventListener("click", () => {
         GlobalState.clearSession();
