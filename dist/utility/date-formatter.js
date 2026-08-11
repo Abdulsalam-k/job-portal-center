@@ -17,6 +17,19 @@ export const DateFormatter = {
             return `${Math.floor(diffDays / 7)} weeks ago`;
         return date.toLocaleDateString();
     },
+    formatExact(isoDateString) {
+        const date = new Date(isoDateString);
+        if (isNaN(date.getTime()))
+            return "Invalid date";
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    },
     isOlderThanDays(isoDateString, days) {
         const date = new Date(isoDateString);
         const now = new Date();

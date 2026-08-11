@@ -156,11 +156,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             container.innerHTML = items.map(item => {
                 const isStale = DateFormatter.isOlderThanDays(item.movedAt, 14) && status === "applied";
                 const timeAgo = DateFormatter.formatRelative(item.movedAt);
+                const exactTime = DateFormatter.formatExact(item.movedAt); // <--- Exact timestamp added here
 
                 return `
                     <div class="pipeline-card" style="position: relative;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
-                            <span style="font-size: 0.65rem; color: var(--text-muted);">${timeAgo}</span>
+                            <span style="font-size: 0.65rem; color: var(--text-muted);" title="Exact: ${exactTime}">📅 ${timeAgo} (${exactTime})</span>
                             ${isStale ? '<span style="font-size: 0.65rem; background: #fee2e2; color: #dc2626; padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: bold;">⚠️ Stale</span>' : ''}
                         </div>
                         
@@ -269,15 +270,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const progressed = pipeline.filter(p => p.status === "interviewing" || p.status === "offer" || p.status === "closed").length;
         const responseRate = totalApplied > 0 ? Math.round((progressed / totalApplied) * 100) : 0;
 
-        // Calculate Average Time-to-First-Response
-        // We look for items that have progressed and check how long they took
         const respondedItems = pipeline.filter(p => p.status === "interviewing" || p.status === "offer");
         let avgDays = "N/A";
 
         if (respondedItems.length > 0) {
             const totalDays = respondedItems.reduce((acc, item) => {
-                // If you store an appliedAt timestamp, use that. Otherwise, we estimate using movedAt
-                const appliedDate = new Date(item.movedAt).getTime(); // Simplified for demo
+                const appliedDate = new Date(item.movedAt).getTime();
                 const now = Date.now();
                 const diffTime = Math.abs(now - appliedDate);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -290,7 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const rateEl = document.getElementById("stat-response-rate");
         const monthlyEl = document.getElementById("stat-monthly-apps");
-        const timeEl = document.getElementById("stat-avg-time"); // Ensure you have this element ID in your HTML
+        const timeEl = document.getElementById("stat-avg-time"); 
 
         if (rateEl) rateEl.textContent = `${responseRate}%`;
         if (monthlyEl) monthlyEl.textContent = totalApplied.toString();
@@ -298,7 +296,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     
     computeStats();
-
 
     document.getElementById("logout-btn")?.addEventListener("click", () => {
         GlobalState.clearSession();

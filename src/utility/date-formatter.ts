@@ -16,6 +16,20 @@ export const DateFormatter = {
         return date.toLocaleDateString();
     },
 
+    formatExact(isoDateString: string): string {
+        const date = new Date(isoDateString);
+        if (isNaN(date.getTime())) return "Invalid date";
+
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    },
+
     isOlderThanDays(isoDateString: string, days: number): boolean {
         const date = new Date(isoDateString);
         const now = new Date();
