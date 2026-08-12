@@ -42,6 +42,10 @@ body { background-color: var(--bg-main); color: var(--text-main); }
     gap: 1rem; 
     align-items: start; 
 }
+.job-title-link:hover {
+    color: var(--primary) !important;
+    text-decoration: underline !important;
+}
 
 @media (max-width: 1500px) { 
     .pipeline-board { 

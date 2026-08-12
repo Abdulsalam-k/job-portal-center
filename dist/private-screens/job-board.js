@@ -69,13 +69,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         jobFeedEl.innerHTML = filtered.map(({ job, score }) => {
             const isInPipeline = pipeline.some(p => p.id === job.id);
+            const jobUrl = job.url || `https://www.google.com/search?q=${encodeURIComponent(job.title + ' ' + job.company)}`;
             return `
                 <div class="pipeline-card" style="padding: 1.25rem;">
                     <div style="display: flex; justify-content: space-between;">
                         <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">✨ ${score}% Match</span>
                         <span style="font-size: 0.75rem; color: var(--text-muted);">${job.salary || 'Competitive'}</span>
                     </div>
-                    <h3 class="pipeline-card-title" style="margin-top: 0.5rem;">${job.title}</h3>
+                    <h3 style="margin-top: 0.5rem;">
+                        <a href="${jobUrl}" target="_blank" rel="noopener noreferrer" class="job-title-link" style="color: var(--text-main); text-decoration: none; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            ${job.title} <span style="font-size: 0.75rem; opacity: 0.7;">↗</span>
+                        </a>
+                    </h3>
                     <p style="font-size: 0.85rem; color: var(--text-muted);">${job.company}</p>
                     <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.5rem;">
                         ${job.skills.slice(0, 3).map(s => `<span style="font-size: 0.7rem; background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px;">${s}</span>`).join('')}
@@ -118,6 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const isStale = DateFormatter.isOlderThanDays(item.movedAt, 14) && status === "applied";
                 const timeAgo = DateFormatter.formatRelative(item.movedAt);
                 const exactTime = DateFormatter.formatExact(item.movedAt);
+                const jobUrl = item.url || `https://www.google.com/search?q=${encodeURIComponent(item.title + ' ' + item.company)}`;
                 return `
                     <div class="pipeline-card" style="position: relative; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s ease;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
@@ -129,7 +135,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </div>
                         
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 0.3rem;">
-                            <div class="pipeline-card-title" style="font-weight: 600; font-size: 0.95rem; color: #0f172a;">${item.title}</div>
+                            <div style="font-weight: 600; font-size: 0.95rem;">
+                                <a href="${jobUrl}" target="_blank" rel="noopener noreferrer" class="job-title-link" style="color: #0f172a; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem;">
+                                    ${item.title} <span style="font-size: 0.7rem; opacity: 0.7;">↗</span>
+                                </a>
+                            </div>
                             <button class="note-btn" data-id="${item.id}" data-note="${item.note || ''}" style="background: none; border: none; cursor: pointer; font-size: 0.9rem;" title="Add/Edit Note">
                                 ${item.note ? '📝' : '➕📝'}
                             </button>

@@ -13,6 +13,7 @@ export interface Job {
     salary?: string;
     description: string;
     dateAdded: string;
+    url?: string;
 }
 export interface Application {
     id: string;
