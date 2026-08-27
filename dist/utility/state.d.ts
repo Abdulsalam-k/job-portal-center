@@ -32,26 +32,10 @@ declare class AppState {
     setSession(user: User): void;
     getSession(): User | null;
     clearSession(): void;
-    /**
-     * Set or update jobs successfully fetched from the external API
-     */
     setJobs(jobs: Job[]): void;
-    /**
-     * Get combined jobs for UI display (Admin Custom Jobs + API Jobs + Fallbacks)
-     * Neither data source affects or blocks the other.
-     */
     getJobs(): Job[];
-    /**
-     * Get strictly admin-created jobs for the Admin Management panel
-     */
     getAdminJobs(): Job[];
-    /**
-     * Add a new job created explicitly from the Admin panel
-     */
     addJob(job: Job): void;
-    /**
-     * Delete an admin-created job by ID
-     */
     deleteAdminJob(id: string): void;
     getApplications(): Application[];
     addApplication(app: Application): void;

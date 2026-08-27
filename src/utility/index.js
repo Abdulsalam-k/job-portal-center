@@ -94,4 +94,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         }).join('');
     }
 });
-//# sourceMappingURL=index.js.map

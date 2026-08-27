@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         adminNameEl.textContent = adminUser.name;
     }
     let editingJobId = null;
+    // Fetch live API jobs first, then render admin control panel
     try {
         const apiJobs = await ApiService.fetchJobs();
         GlobalState.setJobs(apiJobs);
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.warn("Could not fetch remote jobs for admin background sync.", error);
     }
     renderAdminDashboard();
+    // Handle posting or updating a job
     adminJobForm?.addEventListener("submit", (e) => {
         e.preventDefault();
         const titleInput = document.getElementById("job-title");
@@ -40,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const skills = skillsInput && skillsInput.value ? skillsInput.value.split(",").map(s => s.trim()).filter(Boolean) : ["TypeScript", "General"];
         const description = descInput.value.trim();
         if (editingJobId) {
+            // EDIT MODE: Update existing admin job safely through storage
             const adminJobs = GlobalState.getAdminJobs();
             const updatedAdminJobs = adminJobs.map(job => {
                 if (job.id === editingJobId) {
@@ -55,12 +58,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return job;
             });
             StorageService.save("admin_custom_jobs", updatedAdminJobs);
+            // Reset editing state and button text
             editingJobId = null;
             if (submitBtn)
                 submitBtn.textContent = "Publish Job Listing";
             alert("Job listing updated successfully!");
         }
         else {
+            // CREATE MODE: Add new admin job
             const newJob = {
                 id: `admin-${Date.now()}`,
                 title,
@@ -74,9 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             GlobalState.addJob(newJob);
             alert("Job successfully published to the talent portal!");
         }
+        // Reset form and re-render dashboard
         adminJobForm.reset();
         renderAdminDashboard();
     });
+    // Logout handler
     logoutBtn?.addEventListener("click", () => {
         GlobalState.clearSession();
         window.location.href = "../public-screens/login.html";
@@ -113,6 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         `).join('');
+        // Attach edit handlers for admin jobs only
         document.querySelectorAll(".edit-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
@@ -120,6 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const targetJob = GlobalState.getAdminJobs().find(j => j.id === jobId);
                 if (!targetJob)
                     return;
+                // Populate form fields with existing job data
                 const titleInput = document.getElementById("job-title");
                 const companyInput = document.getElementById("job-company");
                 const salaryInput = document.getElementById("job-salary");
@@ -136,12 +145,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     skillsInput.value = targetJob.skills ? targetJob.skills.join(", ") : "";
                 if (descInput)
                     descInput.value = targetJob.description || "";
+                // Set editing state and change submit button text to indicate update mode
                 editingJobId = targetJob.id;
                 if (submitBtn)
                     submitBtn.textContent = "Update Job Listing";
+                // Scroll smoothly back up to the form
                 adminJobForm.scrollIntoView({ behavior: "smooth" });
             });
         });
+        // Attach delete handlers for admin jobs
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget;
@@ -149,6 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (jobId) {
                     GlobalState.deleteAdminJob(jobId);
                 }
+                // If user was editing this exact job and decided to delete it, reset the form
                 if (editingJobId === jobId) {
                     editingJobId = null;
                     adminJobForm.reset();
@@ -161,4 +174,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 });
-//# sourceMappingURL=job-management.js.map

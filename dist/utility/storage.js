@@ -1,5 +1,4 @@
 export const StorageService = {
-    // Save any data safely with type checking
     save(key, data) {
         try {
             const serializedData = JSON.stringify(data);
@@ -9,7 +8,6 @@ export const StorageService = {
             console.error(`Error saving to localStorage key "${key}":`, error);
         }
     },
-    // Load data and parse it back to its original type
     load(key) {
         try {
             const serializedData = localStorage.getItem(key);

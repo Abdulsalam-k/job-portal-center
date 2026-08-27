@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let editingJobId: string | null = null;
 
-    // Fetch live API jobs first, then render admin control panel
     try {
         const apiJobs = await ApiService.fetchJobs();
         GlobalState.setJobs(apiJobs);
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderAdminDashboard();
 
-    // Handle posting or updating a job
+    
     adminJobForm?.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -51,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const description = descInput.value.trim();
 
         if (editingJobId) {
-            // EDIT MODE: Update existing admin job safely through storage
+        
             const adminJobs = GlobalState.getAdminJobs();
             const updatedAdminJobs = adminJobs.map(job => {
                 if (job.id === editingJobId) {
@@ -69,12 +68,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             StorageService.save("admin_custom_jobs", updatedAdminJobs);
 
-            // Reset editing state and button text
+        
             editingJobId = null;
             if (submitBtn) submitBtn.textContent = "Publish Job Listing";
             alert("Job listing updated successfully!");
         } else {
-            // CREATE MODE: Add new admin job
+        
             const newJob: Job = {
                 id: `admin-${Date.now()}`,
                 title,
@@ -90,12 +89,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Job successfully published to the talent portal!");
         }
 
-        // Reset form and re-render dashboard
+        
         adminJobForm.reset();
         renderAdminDashboard();
     });
 
-    // Logout handler
     logoutBtn?.addEventListener("click", () => {
         GlobalState.clearSession();
         window.location.href = "../public-screens/login.html";
@@ -137,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
         `).join('');
 
-        // Attach edit handlers for admin jobs only
         document.querySelectorAll(".edit-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -146,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (!targetJob) return;
 
-                // Populate form fields with existing job data
+            
                 const titleInput = document.getElementById("job-title") as HTMLInputElement;
                 const companyInput = document.getElementById("job-company") as HTMLInputElement;
                 const salaryInput = document.getElementById("job-salary") as HTMLInputElement;
@@ -160,16 +157,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (skillsInput) skillsInput.value = targetJob.skills ? targetJob.skills.join(", ") : "";
                 if (descInput) descInput.value = targetJob.description || "";
 
-                // Set editing state and change submit button text to indicate update mode
                 editingJobId = targetJob.id;
                 if (submitBtn) submitBtn.textContent = "Update Job Listing";
 
-                // Scroll smoothly back up to the form
+            
                 adminJobForm.scrollIntoView({ behavior: "smooth" });
             });
         });
 
-        // Attach delete handlers for admin jobs
+    
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const target = e.currentTarget as HTMLElement;
@@ -178,8 +174,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (jobId) {
                     GlobalState.deleteAdminJob(jobId);
                 }
-
-                // If user was editing this exact job and decided to delete it, reset the form
                 if (editingJobId === jobId) {
                     editingJobId = null;
                     adminJobForm.reset();

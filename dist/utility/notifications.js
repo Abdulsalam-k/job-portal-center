@@ -1,7 +1,3 @@
-/**
- * Notification Utility
- * Renders non-intrusive floating toast messages.
- */
 export const NotificationService = {
     show(message, type = "info") {
         let container = document.getElementById("toast-container");
