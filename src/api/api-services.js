@@ -8,7 +8,7 @@ export const ApiService = {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 4000);
             const baseUrl = import.meta.env?.VITE_API_BASE_URL || "https://remotive.com/api/remote-jobs";
-            const response = await fetch(`${baseUrl}?limit=15`, {
+            const response = await fetch(`${baseUrl}?`, {
                 method: "GET",
                 signal: controller.signal,
                 headers: {
