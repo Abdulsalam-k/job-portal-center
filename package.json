@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && cp index.html dist/",
+    "build": "tsc && cp index.html dist/ && cp index.css dist/",
     "watch": "tsc -w"
   },
   "devDependencies": {
