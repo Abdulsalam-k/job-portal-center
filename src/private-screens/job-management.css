@@ -173,3 +173,38 @@ body {
     max-height: 600px;
     overflow-y: auto;
 }
+/* Mobile Responsiveness Overrides for Dashboard Layout */
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column; /* Stacks sidebar on top, main content below */
+    }
+
+    .sidebar {
+        width: 100%;            /* Makes sidebar stretch full width */
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem 1rem;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;    /* Turns nav links into a neat horizontal layout */
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .sidebar-nav a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .main-content {
+        padding: 1.25rem;
+        height: auto;           /* Removes fixed height constraint so page scrolls naturally on mobile */
+        overflow-y: visible;
+    }
+
+    .admin-grid-container {
+        grid-template-columns: 1fr; /* Stacks admin forms and list on mobile */
+    }
+}
