@@ -61,4 +61,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4000);
     }
 });
-//# sourceMappingURL=login.js.map

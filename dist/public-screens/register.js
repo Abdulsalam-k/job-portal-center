@@ -49,4 +49,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4000);
     }
 });
-//# sourceMappingURL=register.js.map

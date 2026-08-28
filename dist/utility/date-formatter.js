@@ -33,4 +33,3 @@ export const DateFormatter = {
         return diffDays > days;
     }
 };
-//# sourceMappingURL=date-formatter.js.map

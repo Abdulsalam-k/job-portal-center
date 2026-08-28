@@ -1,4 +1,3 @@
-import {} from "./state.js";
 export const MatchingService = {
     calculateMatch(user, job) {
         if (!user || !user.skills || user.skills.length === 0) {
@@ -20,4 +19,3 @@ export const MatchingService = {
         return Math.min(Math.max(score, 40), 99);
     }
 };
-//# sourceMappingURL=matching.js.map

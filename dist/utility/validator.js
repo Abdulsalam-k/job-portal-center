@@ -10,4 +10,3 @@ export const Validators = {
         return input.replace(/[<>]/g, "");
     }
 };
-//# sourceMappingURL=validator.js.map

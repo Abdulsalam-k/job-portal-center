@@ -273,4 +273,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "../public-screens/login.html";
     });
 });
-//# sourceMappingURL=job-board.js.map

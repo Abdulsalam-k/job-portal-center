@@ -1,3 +1,7 @@
+/**
+ * Notification Utility
+ * Renders non-intrusive floating toast messages.
+ */
 export const NotificationService = {
     show(message, type = "info") {
         let container = document.getElementById("toast-container");
@@ -18,4 +22,3 @@ export const NotificationService = {
         }, 3000);
     }
 };
-//# sourceMappingURL=notifications.js.map

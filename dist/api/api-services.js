@@ -2,7 +2,6 @@
  * API Service Layer
  * Handles fetching live jobs or returning robust local datasets.
  */
-import {} from "../utility/state.js";
 export const ApiService = {
     async fetchJobs() {
         try {
@@ -62,4 +61,3 @@ export const ApiService = {
         }
     }
 };
-//# sourceMappingURL=api-services.js.map

@@ -14,4 +14,3 @@ export const DomUtil = {
         return el;
     }
 };
-//# sourceMappingURL=dom.js.map
