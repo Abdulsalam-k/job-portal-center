@@ -52,10 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
         GlobalState.setSession(user);
 
         // Redirect based on role
-        if (role === "admin") {
-            window.location.href = "../private-screens/job-management.html";
+       if (role === "admin") {
+           window.location.href = "/private-screens/job-management.html";
         } else {
-            window.location.href = "../private-screens/job-board.html";
+           window.location.href = "/private-screens/job-board.html";
         }
     });
 
