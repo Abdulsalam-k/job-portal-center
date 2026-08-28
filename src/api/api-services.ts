@@ -14,7 +14,7 @@ export const ApiService = {
 
             const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL || "https://remotive.com/api/remote-jobs";
 
-            const response = await fetch(`${baseUrl}?limit=15`, {
+            const response = await fetch(`${baseUrl}`, {
                 method: "GET",
                 signal: controller.signal,
                 headers: {
